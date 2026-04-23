@@ -2,36 +2,45 @@ class Microondas:
     def __init__(self):
         self.estado = "APAGADO"
 
-    def abrir_puerta(self):
-        if self.estado != "COCINANDO":
-            self.estado = "PUERTA_ABIERTA"
-        print("Estado:", self.estado)
+    def mostrar_estado(self):
+        print("\nEstado actual:", self.estado)
 
-    def cerrar_puerta(self):
-        if self.estado == "PUERTA_ABIERTA":
-            self.estado = "LISTO"
-        print("Estado:", self.estado)
+    def procesar_evento(self, evento):
+        if self.estado == "APAGADO":
+            if evento == "abrir":
+                self.estado = "PUERTA_ABIERTA"
 
-    def iniciar(self):
-        if self.estado == "LISTO":
-            self.estado = "COCINANDO"
-        print("Estado:", self.estado)
+        elif self.estado == "PUERTA_ABIERTA":
+            if evento == "cerrar":
+                self.estado = "LISTO"
 
-    def pausar(self):
-        if self.estado == "COCINANDO":
-            self.estado = "PAUSADO"
-        print("Estado:", self.estado)
+        elif self.estado == "LISTO":
+            if evento == "iniciar":
+                self.estado = "COCINANDO"
+            elif evento == "abrir":
+                self.estado = "PUERTA_ABIERTA"
 
-    def terminar(self):
-        if self.estado in ["COCINANDO", "PAUSADO"]:
-            self.estado = "LISTO"
-        print("Estado:", self.estado)
+        elif self.estado == "COCINANDO":
+            if evento == "pausar":
+                self.estado = "PAUSADO"
+            elif evento == "terminar":
+                self.estado = "LISTO"
+
+        elif self.estado == "PAUSADO":
+            if evento == "terminar":
+                self.estado = "LISTO"
 
 
-# Prueba del autómata
+# 🔥 IMPORTANTE: este while es lo que hace que funcione
 m = Microondas()
-m.abrir_puerta()
-m.cerrar_puerta()
-m.iniciar()
-m.pausar()
-m.terminar()
+
+while True:
+    m.mostrar_estado()
+    print("Eventos: abrir, cerrar, iniciar, pausar, terminar, salir")
+    evento = input("Ingresa evento: ").lower()
+
+    if evento == "salir":
+        print("Programa terminado")
+        break
+
+    m.procesar_evento(evento)
